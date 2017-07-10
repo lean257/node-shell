@@ -1,11 +1,8 @@
+var commands = require('./commands')
 process.stdout.write('prompt > ')
 process.stdin.on('data', function(data){
-  var cmd = data.toString().trim()
-  if (cmd == 'pwd') {
-    process.stdout.write(process.cwd())
-  } else if (cmd == 'date') {
-    var today = new Date()
-    process.stdout.write(today.toString())
-  }
-  process.stdin.write('\nprompt > ')
+  var pm = data.toString().trim()
+  var file = pm.slice(data.indexOf(' ') + 1)
+  var cmd = data.slice(0, data.indexOf(' '))
+  commands[cmd](file)
 })
