@@ -1,0 +1,26 @@
+{
+  "name": "requesthttp",
+  "version": "2.81.0",
+  "description": "package that allows us to make requests to other sites",
+  "main": "commands.js",
+  "scripts": {
+    "test": "request"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lean257/node-shell.git"
+  },
+  "keywords": [
+    "request"
+  ],
+  "author": "Mikeal Rogers",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/lean257/node-shell/issues"
+  },
+  "homepage": "https://github.com/lean257/node-shell#readme",
+  "dependencies": {
+    "chalk": "^2.0.1",
+    "request": "^2.81.0"
+  }
+}

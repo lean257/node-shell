@@ -1,48 +1,58 @@
+'use_strict';
+
 var fs = require('fs')
 var readline = require('readline')
 var os = require('os')
-module.exports = {
-  pwd : function(str) {
-    process.stdout.write(process.cwd())
-    process.stdout.write('\nprompt > ')
-  },
-  date : function(str) {
-    var today = new Date()
-    process.stdout.write(today.toString())
-    process.stdout.write('\nprompt > ')
-  },
-  ls : function(str) {
+var request = require('request')
+
+  function pwd(stdin, args, done) {
+    done(process.cwd())
+  }
+
+  function date(str, done) {
+    var today = new Date().toString()
+    done(today)
+  }
+
+  function ls(file, done) {
+    var output = "";
     fs.readdir('.', function(err, files) {
-      if (err) throw err
       files.forEach(function(file) {
-        process.stdout.write(file.toString() + "\n");
+        output += file.toString() + "\n";
       })
-    process.stdout.write("prompt > ");
+      done(output);
     });
-  },
-  echo: function(str) {
-    process.stdout.write(str)
-    process.stdout.write('\nprompt > ')
-  },
-  cat: function(str) {
+  }
+
+  function echo(str, done) {
+    done(str)
+  }
+
+  function cat(str, done) {
     fs.readFile(str, (err, data) => {
       if (err) throw err
-      process.stdout.write(data.toString())
+      done(data.toString());
     })
-  },
-  head: function(str) {
+  }
+
+  function head(str, done) {
     var rl = readline.createInterface({
       input: fs.createReadStream(str)
     })
 
     var lineno = 0
+
     rl.on('line', (line) => {
       lineno++
-      if (lineno > 5) rl.close()
-      else process.stdout.write(line.toString() + '\n')
+      if (lineno > 5) {rl.close()}
+      else {
+        var output = line.toString() + '\n'
+        done(output)
+      }
     })
-  },
-  tail: function(str) {
+  }
+
+  function tail(str, done) {
     var rl = readline.createInterface({
       input: fs.createReadStream(str)
     })
@@ -50,18 +60,41 @@ module.exports = {
     var lineno = 0
     rl.on('line', (line) => {
       lineno--
-      if (lineno > -7) rl.close()
-      else process.stdout.write(line.toString() + '\n')
+      if (lineno > -7) {rl.close()}
+      else {
+        var output = line.toString() + '\n'
+        done(output)
+      }
     })
-  },
-  sort: function(str) {
+  }
+
+  function sort(str, done) {
     var arr = []
     fs.readFile(str, (err, data) => {
       if (err) throw err
       var arr = data.toString().split('\n')
       arr.sort()
       var res = arr.join().replace(/,/g, '\n')
-      process.stdout.write(res.toString())
+      done(res.toString())
     })
   }
+
+  function curl(str, done) {
+    request(str, function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the HTML for the Google homepage.
+    });
+  }
+
+module.exports = {
+  cat: cat,
+  head: head,
+  tail: tail,
+  sort: sort,
+  pwd: pwd,
+  curl: curl,
+  date: date,
+  ls: ls,
+  echo: echo
 }
